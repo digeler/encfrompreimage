@@ -1,0 +1,80 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/VM_IP.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string"
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_D1_v2"
+    },
+    "adminUserName": {
+      "type": "string",
+        "defaultValue": "dinor"
+    },
+    "adminPassword": {
+      "type": "securestring",
+        "defaultValue": "Corp123!!!!!"
+    },
+    "networkInterfaceId": {
+      "type": "string",
+      "defaultValue": "/subscriptions/928f4e7e-2c28-4063-a56e-6f1e6f2bb73c/resourceGroups/sql1/providers/Microsoft.Network/networkInterfaces/dincheckcry282"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-04-30-preview",
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType": "Linux",
+            "EncryptionSettings": {
+              "DiskEncryptionKey": {
+                "SecretUrl": "https://encrypttest.vault.azure.net/secrets/ac833a6e-7054-4c88-b0a1-7f5bade12221/85cc5c9423be41499be420237970878a",
+                "SourceVault": {
+                  "Id": "/subscriptions/928f4e7e-2c28-4063-a56e-6f1e6f2bb73c/resourceGroups/sql1/providers/Microsoft.KeyVault/vaults/encrypttest"
+                }
+              },
+              "KeyEncryptionKey": {
+                "KeyUrl": "https://encrypttest.vault.azure.net/keys/hskey/bbb0b6e7e0394307be2786bee36769ea",
+                "SourceVault": {
+                  "Id": "/subscriptions/928f4e7e-2c28-4063-a56e-6f1e6f2bb73c/resourceGroups/sql1/providers/Microsoft.KeyVault/vaults/encrypttest"
+                }
+              },
+              "Enabled": true
+            },
+            "name": "enc-osDisk.34ba37f5-2beb-4771-9122-d91193191844.vhd",
+            "createOption": "FromImage",
+            "image": {
+              "uri": "https://007pqzkn75ztrjmagntpri0.blob.core.windows.net/system/Microsoft.Compute/Images/mydisks/enc-osDisk.34ba37f5-2beb-4771-9122-d91193191844.vhd"
+            },
+            "vhd": {
+              "uri": "https://007pqzkn75ztrjmagntpri0.blob.core.windows.net/vhds/imagenc.vhd"
+            },
+            "caching": "ReadWrite"
+          }
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "networkProfile": { "networkInterfaces": [ { "id": "[parameters('networkInterfaceId')]" } ] },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "https://7pqzkn75ztrjmdiag0.blob.core.windows.net/"
+          }
+        },
+        "provisioningState": 0
+      },
+      "type": "Microsoft.Compute/virtualMachines",
+      "location": "northeurope",
+      "name": "[parameters('vmName')]"
+    }
+  ]
+}
